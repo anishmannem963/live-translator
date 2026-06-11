@@ -16,6 +16,7 @@
       --accent2:    #a78bfa;
       --live:       #22d3a0;
       --warn:       #f87171;
+      --amber:      #fbbf24;
       --text:       #e8e8f0;
       --muted:      #6b6b80;
       --caption-bg: rgba(12,12,20,0.92);
@@ -30,7 +31,6 @@
       flex-direction: column;
     }
 
-    /* ── Header ── */
     header {
       padding: 18px 28px;
       display: flex;
@@ -65,21 +65,19 @@
       letter-spacing: 0.08em;
     }
 
-    /* ── Layout ── */
     main {
       flex: 1;
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 290px 1fr;
     }
 
-    /* ── Sidebar ── */
     aside {
       background: var(--surface);
       border-right: 1px solid var(--border);
-      padding: 24px 18px;
+      padding: 22px 18px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
       overflow-y: auto;
     }
     .section-label {
@@ -106,11 +104,40 @@
       cursor: pointer;
     }
     select:focus { border-color: var(--accent); }
-    select option { background: var(--surface); }
+    select option { background: #13131a; }
+    /* dim unreliable options */
+    select option.unreliable { color: var(--muted); }
 
     .divider { border: none; border-top: 1px solid var(--border); }
 
-    /* free badge inside sidebar */
+    /* lang support pill */
+    .lang-support {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      transition: all 0.25s;
+    }
+    .lang-support.good   { background: rgba(34,211,160,0.07);  border: 1px solid rgba(34,211,160,0.2);  color: var(--live); }
+    .lang-support.ok     { background: rgba(251,191,36,0.07);  border: 1px solid rgba(251,191,36,0.2);  color: var(--amber); }
+    .lang-support.bad    { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); color: var(--warn); }
+    .lang-support-icon   { font-size: 1rem; flex-shrink: 0; }
+
+    /* sarvam fallback tip */
+    .sarvam-tip {
+      display: none;
+      background: rgba(124,106,247,0.07);
+      border: 1px solid rgba(124,106,247,0.2);
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-size: 0.77rem;
+      color: var(--accent2);
+      line-height: 1.55;
+    }
+    .sarvam-tip a { color: var(--accent2); text-underline-offset: 3px; }
+
     .free-note {
       background: rgba(34,211,160,0.07);
       border: 1px solid rgba(34,211,160,0.2);
@@ -124,7 +151,6 @@
       align-items: flex-start;
     }
 
-    /* Mic button */
     .mic-btn {
       width: 100%;
       padding: 14px;
@@ -134,235 +160,97 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.95rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       transition: all 0.2s;
     }
-    .mic-btn.start {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-    }
+    .mic-btn.start { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
     .mic-btn.start:hover { filter: brightness(1.12); transform: translateY(-1px); }
-    .mic-btn.stop {
-      background: rgba(248,113,113,0.1);
-      color: var(--warn);
-      border: 1px solid rgba(248,113,113,0.25);
-    }
+    .mic-btn.stop  { background: rgba(248,113,113,0.1); color: var(--warn); border: 1px solid rgba(248,113,113,0.25); }
     .mic-btn.stop:hover { background: rgba(248,113,113,0.18); }
+    .mic-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; filter: none !important; }
 
-    /* Status */
-    .status-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--muted);
-      flex-shrink: 0;
-      transition: background 0.3s;
-    }
+    .status-row { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background 0.3s; }
     .dot.live  { background: var(--live);  box-shadow: 0 0 6px var(--live);  animation: pulse 1.5s infinite; }
     .dot.error { background: var(--warn); }
+    .dot.warn  { background: var(--amber); }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-    /* Stats */
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .stat-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-    }
-    .stat-val {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent2);
-    }
-    .stat-lbl {
-      font-size: 0.67rem;
-      color: var(--muted);
-      margin-top: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
+    .stat-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+    .stat-val { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--accent2); }
+    .stat-lbl { font-size: 0.67rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
 
-    /* Visualizer */
-    .visualizer-wrap {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      height: 48px;
-    }
+    .visualizer-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; height: 48px; }
     #visualizer { width: 100%; height: 48px; display: block; }
 
-    /* ── Stage ── */
-    .stage {
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-      position: relative;
-      overflow: hidden;
-    }
+    /* Stage */
+    .stage { display: flex; flex-direction: column; background: var(--bg); position: relative; overflow: hidden; }
     .stage::before {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.022) 1px, transparent 0);
       background-size: 32px 32px;
       pointer-events: none;
     }
 
-    .caption-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 40px 48px;
-      position: relative;
-      z-index: 1;
-    }
+    .caption-area { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px 48px; position: relative; z-index: 1; }
 
-    /* History */
-    .history {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 16px;
-      max-height: 260px;
-      overflow: hidden;
-      mask-image: linear-gradient(to bottom, transparent 0%, black 38%);
-    }
-    .history-line {
-      font-size: 1.05rem;
-      color: var(--muted);
-      line-height: 1.55;
-      opacity: 0.5;
-    }
+    .history { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; max-height: 260px; overflow: hidden; mask-image: linear-gradient(to bottom, transparent 0%, black 38%); }
+    .history-line { font-size: 1.05rem; color: var(--muted); line-height: 1.55; opacity: 0.5; }
 
-    /* Active caption */
-    .caption-box {
-      background: var(--caption-bg);
-      border: 1px solid rgba(124,106,247,0.18);
-      border-radius: 16px;
-      padding: 28px 36px;
-      backdrop-filter: blur(12px);
-      min-height: 100px;
-      position: relative;
-    }
-    .caption-box::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(124,106,247,0.12), transparent 60%);
-      pointer-events: none;
-    }
-    .caption-text {
-      font-size: 1.65rem;
-      font-weight: 500;
-      line-height: 1.4;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      min-height: 2.2em;
-    }
-    .caption-text.interim { color: rgba(232,232,240,0.5); }
+    .caption-box { background: var(--caption-bg); border: 1px solid rgba(124,106,247,0.18); border-radius: 16px; padding: 28px 36px; backdrop-filter: blur(12px); min-height: 100px; position: relative; }
+    .caption-box::before { content: ''; position: absolute; inset: -1px; border-radius: 16px; background: linear-gradient(135deg, rgba(124,106,247,0.12), transparent 60%); pointer-events: none; }
+
+    .caption-text { font-size: 1.65rem; font-weight: 500; line-height: 1.4; letter-spacing: -0.02em; color: var(--text); min-height: 2.2em; }
+    .caption-text.interim { color: rgba(232,232,240,0.45); }
     .caption-text.empty   { color: var(--muted); font-size: 1.05rem; font-weight: 400; font-style: italic; }
 
-    .cursor {
-      display: inline-block;
-      width: 3px; height: 1.15em;
-      background: var(--accent);
-      border-radius: 2px;
-      vertical-align: text-bottom;
-      margin-left: 3px;
-      animation: blink 1s step-end infinite;
-    }
+    .cursor { display: inline-block; width: 3px; height: 1.15em; background: var(--accent); border-radius: 2px; vertical-align: text-bottom; margin-left: 3px; animation: blink 1s step-end infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    .lang-tag {
-      position: absolute;
-      top: 14px; right: 16px;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--accent2);
-      opacity: 0.6;
-      letter-spacing: 0.08em;
-    }
+    .lang-tag { position: absolute; top: 14px; right: 16px; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent2); opacity: 0.6; letter-spacing: 0.08em; }
 
-    /* Toolbar */
-    .toolbar {
-      border-top: 1px solid var(--border);
-      padding: 14px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-      position: relative;
-      z-index: 1;
+    /* Error overlay inside caption box */
+    .error-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: rgba(248,113,113,0.06);
+      border: 1px solid rgba(248,113,113,0.25);
+      padding: 24px 32px;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
     }
+    .error-overlay.show { display: flex; }
+    .error-title { color: var(--warn); font-size: 1rem; font-weight: 600; }
+    .error-body  { color: rgba(248,113,113,0.75); font-size: 0.88rem; line-height: 1.6; }
+    .error-fix   { color: var(--accent2); font-size: 0.82rem; line-height: 1.6; }
+
+    .toolbar { border-top: 1px solid var(--border); padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; background: var(--surface); position: relative; z-index: 1; }
     .toolbar-info { font-size: 0.78rem; color: var(--muted); }
-    .clear-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .clear-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 7px 16px; border-radius: 8px; font-family: inherit; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
     .clear-btn:hover { border-color: var(--accent); color: var(--accent2); }
 
-    /* Browser warning banner */
-    .browser-warn {
-      display: none;
-      background: rgba(248,113,113,0.1);
-      border-bottom: 1px solid rgba(248,113,113,0.25);
-      padding: 10px 28px;
-      font-size: 0.82rem;
-      color: var(--warn);
-      text-align: center;
-    }
+    .browser-warn { display: none; background: rgba(248,113,113,0.1); border-bottom: 1px solid rgba(248,113,113,0.25); padding: 10px 28px; font-size: 0.82rem; color: var(--warn); text-align: center; }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 24px; left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      z-index: 100;
-      transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
-      opacity: 0;
-      white-space: nowrap;
-    }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 10px; font-size: 0.85rem; z-index: 100; transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.3s; opacity: 0; white-space: nowrap; }
     .toast.show  { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.error { border-color: rgba(248,113,113,0.4); color: var(--warn); }
 
     @media (max-width: 768px) {
       main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-      aside { border-right: none; border-bottom: 1px solid var(--border); max-height: 48vh; }
+      aside { border-right: none; border-bottom: 1px solid var(--border); max-height: 52vh; }
       .caption-area { padding: 20px 18px; }
-      .caption-text { font-size: 1.25rem; }
+      .caption-text { font-size: 1.2rem; }
       .toolbar { padding: 12px 18px; }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .dot.live, .cursor { animation: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .dot.live, .cursor { animation: none; } }
   </style>
 </head>
 <body>
@@ -376,11 +264,10 @@
 </header>
 
 <div class="browser-warn" id="browserWarn">
-  ⚠️ Your browser doesn't support the Web Speech API. Please use <strong>Chrome</strong> or <strong>Edge</strong> for live captions.
+  ⚠️ Your browser doesn't support the Web Speech API. Please open this in <strong>Google Chrome</strong> or <strong>Microsoft Edge</strong>.
 </div>
 
 <main>
-  <!-- Sidebar -->
   <aside>
     <div class="free-note">
       <span>✦</span>
@@ -392,33 +279,55 @@
     <div>
       <p class="section-label">Settings</p>
       <div style="display:flex;flex-direction:column;gap:12px;">
+
         <div class="field">
           <label>Recognition Language</label>
-          <select id="langCode">
-            <option value="en-US">English (US)</option>
-            <option value="en-GB">English (UK)</option>
-            <option value="en-IN">English (India)</option>
-            <option value="hi-IN">Hindi</option>
-            <option value="bn-IN">Bengali</option>
-            <option value="gu-IN">Gujarati</option>
-            <option value="kn-IN">Kannada</option>
-            <option value="ml-IN">Malayalam</option>
-            <option value="mr-IN">Marathi</option>
-            <option value="pa-IN">Punjabi</option>
-            <option value="ta-IN">Tamil</option>
-            <option value="te-IN">Telugu</option>
-            <option value="ur-PK">Urdu</option>
-            <option value="fr-FR">French</option>
-            <option value="de-DE">German</option>
-            <option value="es-ES">Spanish</option>
-            <option value="zh-CN">Chinese (Mandarin)</option>
-            <option value="ja-JP">Japanese</option>
-            <option value="ar-SA">Arabic</option>
+          <select id="langCode" onchange="onLangChange()">
+            <optgroup label="✅ Fully supported">
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+              <option value="en-IN">English (India)</option>
+              <option value="hi-IN">Hindi</option>
+              <option value="fr-FR">French</option>
+              <option value="de-DE">German</option>
+              <option value="es-ES">Spanish</option>
+              <option value="pt-BR">Portuguese (Brazil)</option>
+              <option value="zh-CN">Chinese (Mandarin)</option>
+              <option value="ja-JP">Japanese</option>
+              <option value="ko-KR">Korean</option>
+              <option value="ar-SA">Arabic</option>
+              <option value="ru-RU">Russian</option>
+              <option value="it-IT">Italian</option>
+            </optgroup>
+            <optgroup label="⚠️ May need VPN / Chrome flags">
+              <option value="ta-IN">Tamil (ta-IN)</option>
+              <option value="te-IN">Telugu (te-IN)</option>
+              <option value="kn-IN">Kannada (kn-IN)</option>
+              <option value="ml-IN">Malayalam (ml-IN)</option>
+              <option value="bn-IN">Bengali (bn-IN)</option>
+              <option value="gu-IN">Gujarati (gu-IN)</option>
+              <option value="mr-IN">Marathi (mr-IN)</option>
+              <option value="pa-IN">Punjabi (pa-IN)</option>
+              <option value="ur-PK">Urdu (ur-PK)</option>
+            </optgroup>
           </select>
         </div>
+
+        <!-- dynamic support indicator -->
+        <div class="lang-support good" id="langSupport">
+          <span class="lang-support-icon">✅</span>
+          <span id="langSupportText">Fully supported in Chrome & Edge</span>
+        </div>
+
+        <!-- sarvam fallback tip (shown for unreliable langs) -->
+        <div class="sarvam-tip" id="sarvamTip">
+          <strong>Better option for this language:</strong> Sarvam AI's Saaras v3 model has excellent support for Indian languages including Tamil, Telugu, Kannada and more. It's not free but gives ₹100 free credits on signup — enough for ~2 mins of live captioning to test it out.<br><br>
+          👉 <a href="https://dashboard.sarvam.ai" target="_blank">dashboard.sarvam.ai</a>
+        </div>
+
         <div class="field">
           <label>Caption Size</label>
-          <select id="fontSize">
+          <select id="fontSize" onchange="document.getElementById('captionText').style.fontSize=this.value">
             <option value="1.2rem">Small</option>
             <option value="1.65rem" selected>Medium</option>
             <option value="2.2rem">Large</option>
@@ -430,18 +339,14 @@
 
     <hr class="divider" />
 
-    <div>
-      <button class="mic-btn start" id="mainBtn" onclick="toggleRecording()">
-        <span id="btnIcon">🎤</span>
-        <span id="btnLabel">Start Listening</span>
-      </button>
-    </div>
+    <button class="mic-btn start" id="mainBtn" onclick="toggleRecording()">
+      <span id="btnIcon">🎤</span>
+      <span id="btnLabel">Start Listening</span>
+    </button>
 
-    <div>
-      <div class="status-row">
-        <div class="dot" id="statusDot"></div>
-        <span id="statusText">Ready — press Start to begin</span>
-      </div>
+    <div class="status-row">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText">Ready — press Start to begin</span>
     </div>
 
     <hr class="divider" />
@@ -478,8 +383,16 @@
   <div class="stage">
     <div class="caption-area">
       <div class="history" id="history"></div>
-      <div class="caption-box">
+      <div class="caption-box" style="position:relative;">
         <span class="lang-tag" id="langTag">EN</span>
+
+        <!-- Error overlay -->
+        <div class="error-overlay" id="errorOverlay">
+          <div class="error-title" id="errTitle">⚠️ service-not-allowed</div>
+          <div class="error-body" id="errBody"></div>
+          <div class="error-fix" id="errFix"></div>
+        </div>
+
         <div class="caption-text empty" id="captionText">
           Start listening to see live captions here…
         </div>
@@ -495,186 +408,227 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Support check ────────────────────────────────────────────────────────────
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (!SpeechRecognition) {
   document.getElementById('browserWarn').style.display = 'block';
   document.getElementById('mainBtn').disabled = true;
-  document.getElementById('statusText').textContent = 'Browser not supported — use Chrome or Edge';
+}
+
+// Languages where Web Speech API works reliably
+const RELIABLE = new Set([
+  'en-US','en-GB','en-IN','hi-IN','fr-FR','de-DE','es-ES',
+  'pt-BR','zh-CN','ja-JP','ko-KR','ar-SA','ru-RU','it-IT'
+]);
+// Indian regional langs — Chrome routes these through Google STT but
+// availability depends on region & Chrome build
+const UNRELIABLE = new Set([
+  'ta-IN','te-IN','kn-IN','ml-IN','bn-IN','gu-IN','mr-IN','pa-IN','ur-PK'
+]);
+
+const langSupportMap = {
+  good: { cls:'good', icon:'✅', text:'Fully supported in Chrome & Edge' },
+  ok:   { cls:'ok',   icon:'⚠️', text:'Supported but may fail in some regions — see tip below' },
+  bad:  { cls:'bad',  icon:'❌', text:'Often blocked by Google STT in your region' },
+};
+
+function onLangChange() {
+  const lang = document.getElementById('langCode').value;
+  const el   = document.getElementById('langSupport');
+  const txt  = document.getElementById('langSupportText');
+  const tip  = document.getElementById('sarvamTip');
+  const tag  = document.getElementById('langTag');
+  tag.textContent = lang.split('-')[0].toUpperCase();
+  document.getElementById('toolbarInfo').textContent =
+    document.getElementById('langCode').options[document.getElementById('langCode').selectedIndex].text
+    + ' · Web Speech API';
+
+  if (UNRELIABLE.has(lang)) {
+    const info = langSupportMap.ok;
+    el.className = 'lang-support ' + info.cls;
+    el.children[0].textContent = info.icon;
+    txt.textContent = info.text;
+    tip.style.display = 'block';
+  } else {
+    const info = langSupportMap.good;
+    el.className = 'lang-support ' + info.cls;
+    el.children[0].textContent = info.icon;
+    txt.textContent = info.text;
+    tip.style.display = 'none';
+  }
+  // dismiss any current error overlay
+  document.getElementById('errorOverlay').classList.remove('show');
+}
+
+// ─── Error explanation map ────────────────────────────────────────────────────
+const ERROR_INFO = {
+  'service-not-allowed': {
+    title: '⚠️ service-not-allowed',
+    body: 'Google\'s speech recognition server refused the request for this language. This usually happens with Indian regional languages (Tamil, Telugu, Kannada etc.) when Chrome can\'t reach Google\'s STT servers for that locale.',
+    fix: `How to fix:\n① Make sure you're using Google Chrome (not Brave, Opera, or a Chromium fork)\n② Try a VPN set to India or USA — Google restricts some languages by region\n③ Go to chrome://flags → search "Web Speech" → enable experimental speech recognition\n④ Or switch to a language marked ✅ above\n⑤ For full Indian language support, try Sarvam AI (₹100 free credits)`
+  },
+  'not-allowed': {
+    title: '🎤 Microphone blocked',
+    body: 'Microphone permission was denied.',
+    fix: 'Click the 🔒 icon in your address bar → Allow microphone → refresh the page.'
+  },
+  'network': {
+    title: '🌐 Network error',
+    body: 'Could not reach Google\'s speech servers.',
+    fix: 'Check your internet connection and try again.'
+  },
+  'audio-capture': {
+    title: '🎤 No microphone found',
+    body: 'No microphone was detected on your device.',
+    fix: 'Plug in a microphone or check your system audio settings.'
+  },
+  'aborted': { title: 'Stopped', body: 'Recognition was aborted.', fix: '' },
+  'no-speech': { title: '', body: '', fix: '' },
+  'language-not-supported': {
+    title: '🌐 Language not supported',
+    body: 'This language is not supported by your browser\'s speech engine.',
+    fix: 'Switch to English (US/IN) or another ✅ language above, or try Sarvam AI for Indian languages.'
+  },
+};
+
+function showError(code) {
+  const info = ERROR_INFO[code] || { title: `Error: ${code}`, body: 'An unexpected error occurred.', fix: 'Try restarting or switching to English (US).' };
+  if (!info.title) return; // silent errors like no-speech
+  const ov = document.getElementById('errorOverlay');
+  document.getElementById('errTitle').textContent = info.title;
+  document.getElementById('errBody').textContent  = info.body;
+  document.getElementById('errFix').textContent   = info.fix;
+  ov.classList.add('show');
+  setStatus(info.title, 'error');
 }
 
 // ─── State ────────────────────────────────────────────────────────────────────
-let recognition = null;
-let isRecording  = false;
-let wordCount    = 0;
-let lineCount    = 0;
-let timerInterval = null;
-let sessionStart  = null;
+let recognition = null, isRecording = false;
+let wordCount = 0, lineCount = 0;
+let timerInterval = null, sessionStart = null;
 let audioCtx = null, analyser = null, mediaStream = null, vizRaf = null;
 
-// ─── UI refs ──────────────────────────────────────────────────────────────────
-const mainBtn     = document.getElementById('mainBtn');
-const btnIcon     = document.getElementById('btnIcon');
-const btnLabel    = document.getElementById('btnLabel');
-const statusDot   = document.getElementById('statusDot');
-const statusText  = document.getElementById('statusText');
-const captionEl   = document.getElementById('captionText');
-const historyEl   = document.getElementById('history');
-const wordCountEl = document.getElementById('wordCount');
-const lineCountEl = document.getElementById('lineCount');
-const timeValEl   = document.getElementById('timeVal');
-const langTagEl   = document.getElementById('langTag');
-const toolbarInfo = document.getElementById('toolbarInfo');
-const toastEl     = document.getElementById('toast');
-const canvas      = document.getElementById('visualizer');
-const ctx2d       = canvas.getContext('2d');
-const fontSel     = document.getElementById('fontSize');
-const langSel     = document.getElementById('langCode');
+const $ = id => document.getElementById(id);
+const captionEl   = $('captionText');
+const historyEl   = $('history');
+const statusDot   = $('statusDot');
+const statusText  = $('statusText');
+const mainBtn     = $('mainBtn');
 
-// ─── Font size live update ────────────────────────────────────────────────────
-fontSel.addEventListener('change', () => {
-  captionEl.style.fontSize = fontSel.value;
-});
-
-// ─── Lang tag update ──────────────────────────────────────────────────────────
-langSel.addEventListener('change', () => {
-  langTagEl.textContent = langSel.value.split('-')[0].toUpperCase();
-  toolbarInfo.textContent = `${langSel.options[langSel.selectedIndex].text} · Web Speech API`;
-});
-
-// ─── Toast ────────────────────────────────────────────────────────────────────
-function showToast(msg, type = '') {
-  toastEl.textContent = msg;
-  toastEl.className = 'toast show' + (type ? ' ' + type : '');
-  clearTimeout(toastEl._t);
-  toastEl._t = setTimeout(() => toastEl.className = 'toast', 3200);
+function showToast(msg, type='') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className='toast', 3200);
 }
-
-// ─── Status ───────────────────────────────────────────────────────────────────
-function setStatus(label, state = '') {
+function setStatus(label, state='') {
   statusText.textContent = label;
-  statusDot.className = 'dot' + (state ? ' ' + state : '');
+  statusDot.className = 'dot' + (state?' '+state:'');
 }
-
-// ─── Timer ────────────────────────────────────────────────────────────────────
 function startTimer() {
   sessionStart = Date.now();
   timerInterval = setInterval(() => {
-    const s  = Math.floor((Date.now() - sessionStart) / 1000);
-    const mm = String(Math.floor(s / 60)).padStart(2, '0');
-    const ss = String(s % 60).padStart(2, '0');
-    timeValEl.textContent = `${mm}:${ss}`;
+    const s = Math.floor((Date.now()-sessionStart)/1000);
+    $('timeVal').textContent = String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
   }, 1000);
 }
 function stopTimer() { clearInterval(timerInterval); }
 
 // ─── Visualizer ───────────────────────────────────────────────────────────────
+const canvas = $('visualizer'), ctx2d = canvas.getContext('2d');
 function resizeCanvas() {
-  const dpr = devicePixelRatio || 1;
-  const w = canvas.offsetWidth, h = canvas.offsetHeight;
-  canvas.width  = w * dpr;
-  canvas.height = h * dpr;
-  ctx2d.scale(dpr, dpr);
-  canvas.style.width  = w + 'px';
-  canvas.style.height = h + 'px';
+  const dpr=devicePixelRatio||1, w=canvas.offsetWidth, h=canvas.offsetHeight;
+  canvas.width=w*dpr; canvas.height=h*dpr;
+  ctx2d.scale(dpr,dpr);
+  canvas.style.width=w+'px'; canvas.style.height=h+'px';
 }
-
 function drawViz() {
-  const w = canvas.offsetWidth, h = canvas.offsetHeight;
-  ctx2d.clearRect(0, 0, w, h);
+  const w=canvas.offsetWidth, h=canvas.offsetHeight;
+  ctx2d.clearRect(0,0,w,h);
   if (!analyser) {
-    ctx2d.fillStyle = 'rgba(124,106,247,0.1)';
-    ctx2d.fillRect(0, h / 2 - 1, w, 2);
-    vizRaf = requestAnimationFrame(drawViz);
+    ctx2d.fillStyle='rgba(124,106,247,0.1)';
+    ctx2d.fillRect(0,h/2-1,w,2);
+    vizRaf=requestAnimationFrame(drawViz);
     return;
   }
-  const data = new Uint8Array(analyser.frequencyBinCount);
+  const data=new Uint8Array(analyser.frequencyBinCount);
   analyser.getByteFrequencyData(data);
-  const barW = 3, gap = 2, step = barW + gap;
-  const bars = Math.floor(w / step);
-  for (let i = 0; i < bars; i++) {
-    const v  = data[Math.floor(i * data.length / bars)] / 255;
-    const bh = Math.max(2, v * h * 0.88);
-    ctx2d.fillStyle = `rgba(124,106,247,${0.25 + v * 0.75})`;
+  const step=5;
+  for (let i=0;i<Math.floor(w/step);i++) {
+    const v=data[Math.floor(i*data.length/(w/step))]/255;
+    const bh=Math.max(2,v*h*0.88);
+    ctx2d.fillStyle=`rgba(124,106,247,${0.2+v*0.8})`;
     ctx2d.beginPath();
-    ctx2d.roundRect(i * step, (h - bh) / 2, barW, bh, 2);
+    ctx2d.roundRect(i*step,(h-bh)/2,3,bh,2);
     ctx2d.fill();
   }
-  vizRaf = requestAnimationFrame(drawViz);
+  vizRaf=requestAnimationFrame(drawViz);
 }
-
 async function startVisualizer() {
   try {
-    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    audioCtx  = new AudioContext();
-    analyser  = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
+    mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    audioCtx = new AudioContext();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize=256;
     audioCtx.createMediaStreamSource(mediaStream).connect(analyser);
-  } catch(_) { /* mic visualizer optional */ }
+  } catch(_) {}
 }
 function stopVisualizer() {
   cancelAnimationFrame(vizRaf);
-  if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
-  if (audioCtx)    { audioCtx.close(); audioCtx = null; }
-  analyser = null;
+  if (mediaStream) { mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
+  if (audioCtx) { audioCtx.close(); audioCtx=null; }
+  analyser=null;
 }
 
 // ─── Captions ─────────────────────────────────────────────────────────────────
-function setCaption(text, interim = false) {
-  captionEl.className = 'caption-text' + (interim ? ' interim' : '');
-  captionEl.style.fontSize = fontSel.value;
-  captionEl.innerHTML = esc(text) + '<span class="cursor"></span>';
+function setCaption(text, interim=false) {
+  const fs = $('fontSize').value;
+  captionEl.className = 'caption-text'+(interim?' interim':'');
+  captionEl.style.fontSize = fs;
+  captionEl.innerHTML = text.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '<span class="cursor"></span>';
 }
-function setEmpty(msg = 'Listening… start speaking.') {
-  captionEl.className = 'caption-text empty';
-  captionEl.textContent = msg;
+function setEmpty(msg='Listening… start speaking.') {
+  captionEl.className='caption-text empty';
+  captionEl.textContent=msg;
 }
 function pushHistory(text) {
   if (!text.trim()) return;
-  const div = document.createElement('div');
-  div.className = 'history-line';
-  div.textContent = text;
-  historyEl.appendChild(div);
-  while (historyEl.children.length > 10) historyEl.removeChild(historyEl.firstChild);
-  lineCount++;
-  lineCountEl.textContent = lineCount;
-  wordCount += text.trim().split(/\s+/).length;
-  wordCountEl.textContent = wordCount;
-}
-function esc(t) {
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const d=document.createElement('div');
+  d.className='history-line';
+  d.textContent=text;
+  historyEl.appendChild(d);
+  while(historyEl.children.length>10) historyEl.removeChild(historyEl.firstChild);
+  lineCount++; $('lineCount').textContent=lineCount;
+  wordCount+=text.trim().split(/\s+/).length; $('wordCount').textContent=wordCount;
 }
 function clearCaptions() {
-  historyEl.innerHTML = '';
-  wordCount = 0; lineCount = 0;
-  wordCountEl.textContent = '0';
-  lineCountEl.textContent = '0';
+  historyEl.innerHTML=''; wordCount=0; lineCount=0;
+  $('wordCount').textContent='0'; $('lineCount').textContent='0';
   showToast('History cleared');
 }
 
-// ─── Main toggle ──────────────────────────────────────────────────────────────
+// ─── Recording ────────────────────────────────────────────────────────────────
 function toggleRecording() {
-  if (isRecording) stopRecording();
-  else startRecording();
+  isRecording ? stopRecording() : startRecording();
 }
 
 async function startRecording() {
   if (!SpeechRecognition) return;
+  $('errorOverlay').classList.remove('show');
 
   recognition = new SpeechRecognition();
-  recognition.continuous      = true;
-  recognition.interimResults  = true;
-  recognition.lang            = langSel.value;
+  recognition.continuous     = true;
+  recognition.interimResults = true;
+  recognition.lang           = $('langCode').value;
   recognition.maxAlternatives = 1;
 
   recognition.onstart = async () => {
-    isRecording = true;
-    mainBtn.className  = 'mic-btn stop';
-    btnIcon.textContent = '⏹';
-    btnLabel.textContent = 'Stop Listening';
-    setStatus('Live — speak now', 'live');
+    isRecording=true;
+    mainBtn.className='mic-btn stop';
+    $('btnIcon').textContent='⏹';
+    $('btnLabel').textContent='Stop Listening';
+    setStatus('Live — speak now','live');
     setEmpty();
-    langTagEl.textContent = langSel.value.split('-')[0].toUpperCase();
     startTimer();
     await startVisualizer();
     resizeCanvas();
@@ -684,58 +638,49 @@ async function startRecording() {
   };
 
   recognition.onresult = (e) => {
-    let interim = '', final = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal) final += t;
-      else interim += t;
+    $('errorOverlay').classList.remove('show');
+    let interim='', final='';
+    for (let i=e.resultIndex;i<e.results.length;i++) {
+      const t=e.results[i][0].transcript;
+      e.results[i].isFinal ? final+=t : interim+=t;
     }
     if (final)   { pushHistory(final.trim()); setEmpty(); }
     if (interim) setCaption(interim, true);
   };
 
   recognition.onerror = (e) => {
-    if (e.error === 'not-allowed') {
-      showToast('Microphone access denied.', 'error');
-      setStatus('Mic access denied', 'error');
-      stopRecording();
-    } else if (e.error === 'no-speech') {
-      // silent — no-speech is normal
-    } else {
-      showToast(`Error: ${e.error}`, 'error');
+    if (e.error==='no-speech') return; // normal silence
+    showError(e.error);
+    if (['not-allowed','service-not-allowed','language-not-supported','audio-capture'].includes(e.error)) {
+      stopRecording(false);
     }
   };
 
+  // auto-restart on end unless user stopped
   recognition.onend = () => {
-    // auto-restart to keep it continuous unless user stopped
-    if (isRecording) recognition.start();
+    if (isRecording) {
+      try { recognition.start(); } catch(_) {}
+    }
   };
 
-  try {
-    recognition.start();
-  } catch(e) {
-    showToast('Could not start: ' + e.message, 'error');
-  }
+  try { recognition.start(); }
+  catch(e) { showToast('Could not start: '+e.message,'error'); }
 }
 
-function stopRecording() {
-  isRecording = false;
-  if (recognition) { recognition.onend = null; recognition.stop(); recognition = null; }
-  stopVisualizer();
-  stopTimer();
-  mainBtn.className    = 'mic-btn start';
-  btnIcon.textContent  = '🎤';
-  btnLabel.textContent = 'Start Listening';
-  setStatus('Stopped', '');
+function stopRecording(showMsg=true) {
+  isRecording=false;
+  if (recognition) { recognition.onend=null; recognition.stop(); recognition=null; }
+  stopVisualizer(); stopTimer();
+  mainBtn.className='mic-btn start';
+  $('btnIcon').textContent='🎤';
+  $('btnLabel').textContent='Start Listening';
+  setStatus('Stopped','');
   setEmpty('Start listening to see live captions here…');
-  showToast('Session ended');
-  // draw idle bar
-  cancelAnimationFrame(vizRaf);
-  drawViz();
+  if (showMsg) showToast('Session ended');
+  cancelAnimationFrame(vizRaf); drawViz();
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
-window.addEventListener('load',   () => { resizeCanvas(); drawViz(); });
+window.addEventListener('load', ()=>{ resizeCanvas(); drawViz(); onLangChange(); });
 window.addEventListener('resize', resizeCanvas);
 </script>
 </body>
